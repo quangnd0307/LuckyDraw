@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quay Số Trúng Thưởng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #0a3d62;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: #1e3799;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+        .card {
+            width: 200px;
+            height: 200px;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .spinning {
+            animation: spin 0.2s linear infinite;
+        }
+        @keyframes spin {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .selection {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .select-box {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+        .button {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background: #e67e22;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .modal img {
+            width: 100px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card" id="prize-image">
+            <img src="https://cdn-icons-png.flaticon.com/256/16774/16774983.png" alt="Giải thưởng">
+        </div>
+        
+        <div class="selection">
+            <select id="prize-select" class="select-box">
+                <option value="Giải Nhất">Giải Nhất</option>
+                <option value="Giải Nhì">Giải Nhì</option>
+                <option value="Giải Ba" selected>Giải Ba</option>
+            </select>
+            <select id="round-select" class="select-box">
+                <option value="1">Lần 1</option>
+                <option value="2">Lần 2</option>
+                <option value="3">Lần 3</option>
+                <option value="4">Lần 4</option>
+                <option value="5">Lần 5</option>
+            </select>
+        </div>
+
+        <button class="button" id="spin-button">Quay</button>
+
+        <div class="modal" id="result-box">
+            <p id="result-text"></p>
+            <img id="result-image" src="" alt="Trúng thưởng">
+            <br>
+            <button class="button" onclick="closeModal()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        const prizeImages = [
+            "https://cdn-icons-png.flaticon.com/256/16774/16774983.png",
+            "https://cdn-icons-png.flaticon.com/256/16774/16774995.png",
+            "https://cdn-icons-png.flaticon.com/256/16775/16775013.png"
+        ];
+        let interval;
+
+        document.getElementById("spin-button").addEventListener("click", function() {
+            const resultBox = document.getElementById("result-box");
+            const resultText = document.getElementById("result-text");
+            const resultImage = document.getElementById("result-image");
+            const prizeImage = document.getElementById("prize-image").children[0];
+            const selectedPrize = document.getElementById("prize-select").value;
+            const selectedRound = document.getElementById("round-select").value;
+            
+            resultBox.style.display = "none";
+            prizeImage.classList.add("spinning");
+            let index = 0;
+            
+            interval = setInterval(() => {
+                prizeImage.src = prizeImages[index % prizeImages.length];
+                index++;
+            }, 100);
+            
+            setTimeout(() => {
+                clearInterval(interval);
+                const winningImage = prizeImages[Math.floor(Math.random() * prizeImages.length)];
+                prizeImage.src = winningImage;
+                prizeImage.classList.remove("spinning");
+                resultText.textContent = `Chúc mừng! Bạn đã trúng ${selectedPrize} - Lần ${selectedRound}!`;
+                resultImage.src = winningImage;
+                resultBox.style.display = "block";
+            }, 3000);
+        });
+
+        function closeModal() {
+            document.getElementById("result-box").style.display = "none";
+        }
+    </script>
+</body>
+</html>
