@@ -120,6 +120,9 @@
         </div>
     </div>
 
+    <audio id="spin-sound" src="http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Sevish_-__nbsp_.mp3"></audio>
+    <audio id="win-sound" src="http://commondatastorage.googleapis.com/codeskulptor-assets/week7-brrring.m4a"></audio>
+
     <script>
         const prizeImages = [
             "https://cdn-icons-png.flaticon.com/256/16774/16774983.png",
@@ -129,6 +132,10 @@
         let interval;
 
         document.getElementById("spin-button").addEventListener("click", function() {
+            const spinSound = document.getElementById("spin-sound");
+            const winSound = document.getElementById("win-sound");
+            spinSound.play();
+
             const resultBox = document.getElementById("result-box");
             const resultText = document.getElementById("result-text");
             const resultImage = document.getElementById("result-image");
@@ -147,12 +154,18 @@
             
             setTimeout(() => {
                 clearInterval(interval);
+                spinSound.pause();
+                spinSound.currentTime = 0;
+                
                 const winningImage = prizeImages[Math.floor(Math.random() * prizeImages.length)];
                 prizeImage.src = winningImage;
                 prizeImage.classList.remove("spinning");
+                
                 resultText.textContent = `Chúc mừng! Bạn đã trúng ${selectedPrize} - Lần ${selectedRound}!`;
                 resultImage.src = winningImage;
                 resultBox.style.display = "block";
+                
+                winSound.play();
             }, 3000);
         });
 
